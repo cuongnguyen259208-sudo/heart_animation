@@ -1,0 +1,147 @@
+html,
+body {
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  background: #000;
+  overflow: hidden;
+}
+
+/* Nền tối có chút ánh hồng cho ấm hơn */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at 50% 55%, #2a0d1c 0%, #12060d 45%, #000 100%);
+  z-index: 0;
+}
+
+canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Mưa trái tim nằm dưới */
+#heartrain {
+  z-index: 1;
+}
+
+/* Trái tim chính nằm trên */
+#pinkboard {
+  z-index: 2;
+}
+
+/* Icon trái tim ở giữa màn hình */
+.heart-icon {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 80px;
+  height: 72.5px;
+  transform: translate(-50%, -50%) scale(1);
+  transform-origin: center;
+  z-index: 3;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: heart-pulse 1.6s ease-in-out infinite;
+  filter: drop-shadow(0 0 18px rgba(234, 128, 176, 0.65));
+  
+  /* Bật tăng tốc phần cứng GPU giúp chuyển động phóng to siêu mượt */
+  will-change: transform, opacity, filter;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.heart-icon svg {
+  width: 100%;
+  height: 100%;
+  fill: #ea80b0;
+  transition: filter 0.3s ease;
+}
+
+.heart-icon:hover {
+  filter: drop-shadow(0 0 28px rgba(234, 128, 176, 0.95));
+}
+
+.heart-icon:focus-visible {
+  outline: 2px solid #ffd0e0;
+  outline-offset: 6px;
+  border-radius: 50%;
+}
+
+/* Hiệu ứng nhịp đập nhẹ ban đầu */
+@keyframes heart-pulse {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.12);
+  }
+}
+
+/* Hiệu ứng phóng to mượt mà khi click: 
+   Nén nhẹ (anticipation) -> bùng nổ phóng to 4x -> mờ dần tự nhiên */
+@keyframes heart-grow {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+    filter: drop-shadow(0 0 18px rgba(234, 128, 176, 0.7));
+  }
+  18% {
+    /* Co nhẹ lại tạo lực đàn hồi trước khi nở bung */
+    transform: translate(-50%, -50%) scale(0.92);
+    opacity: 1;
+    filter: drop-shadow(0 0 25px rgba(234, 128, 176, 0.9));
+  }
+  60% {
+    opacity: 0.85;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(4.2);
+    opacity: 0;
+    filter: drop-shadow(0 0 60px rgba(234, 128, 176, 0));
+  }
+}
+
+.heart-icon.grow {
+  /* Dùng keyframe thay cho transition để tránh giật khung hình */
+  animation: heart-grow 0.85s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Hiệu ứng phóng to mượt mà khi click: kéo dài 1.5s
+   Nén nhẹ (anticipation) -> từ từ bùng nổ -> mờ dần tự nhiên */
+@keyframes heart-grow {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+    filter: drop-shadow(0 0 18px rgba(234, 128, 176, 0.7));
+  }
+  15% {
+    /* Co nhẹ lại tạo lực đàn hồi trước khi nở bung */
+    transform: translate(-50%, -50%) scale(0.92);
+    opacity: 1;
+    filter: drop-shadow(0 0 25px rgba(234, 128, 176, 0.9));
+  }
+  65% {
+    /* Nở từ từ và bắt đầu mờ nhẹ */
+    transform: translate(-50%, -50%) scale(3);
+    opacity: 0.9;
+  }
+  100% {
+    /* Tan biến hoàn toàn khớp với kích thước trái tim hạt */
+    transform: translate(-50%, -50%) scale(4.2);
+    opacity: 0;
+    filter: drop-shadow(0 0 60px rgba(234, 128, 176, 0));
+  }
+}
+
+.heart-icon.grow {
+  /* Tăng thời gian chạy animation lên 1.5s */
+  animation: heart-grow 1.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
